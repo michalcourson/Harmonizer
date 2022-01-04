@@ -1,0 +1,42 @@
+OVERVIEW
+Files:
+harmonizer/harmonizer.ino: driver sketch to be loaded onto a Teensy 4.1, 
+instantiates Audio processing objects that pitch shift the input signal. Four concurrent shifts are mixed together and sent to the output.
+
+to_audio_library_folder/analyze_notefreq.cpp/analyse_notefreq.h: modification of Audio Library pitch estimator to work with block size of 1024
+
+to_audio_library_folder/Audio.h: modification of Audio Library file to include effect_pitch_shift.h
+
+to_core_teensy4_folder/AudioStream.h: modification of Audio Library Stream objects to use block size of 1024 instead of 128
+
+to_audio_library_folder/effect_pitch_shift.cpp/effect_pitch_shift.h: Definition and implementation of new processing object to perform pitch shifting
+
+
+BASIC OPERATION
+The Audio Library has an infrastructure that calls the virtualized update() function on any object
+whenever a new input block is passed to it. This is done with a soft interrupt and requires no 
+direct programmer interaction. More information on the Audio infrastructure can be found here: https://www.pjrc.com/teensy/td_libs_Audio.html. 
+
+Control flow for this sketch is then mostly handled by the infrastructure, processing the audio
+and then sending it to the next object to handle. The rest of the sketch handles MIDI events and
+changes parameters within the pitch shifting objects accordingly.
+
+Due to the run time of our algorithms, we decided to only have 4 shifts running concurrently. To
+keep track of the active voices, we use a saturating circular buffer with a capacity limit of 4
+and a FIFO eviction policy. As a MIDI signal is received, its value (0 to 127) is pushed to the
+buffer. If there were already 4 keys pressed, the buffer evicts the oldest pressed note and adds
+the newest pressed note. This ensures that there are always at most 4 active notes, even when more
+than 4 MIDI keys are pressed. Finally, notes are removed from the buffer when they are released on
+the controller. The buffer is called “NoteQueue” and the class definition is found in harmonizer/harmonizer.ino.
+
+The pitch shift algorithms need to know the pitch of the input signal. For this, we use a version
+of the Teensy’s AudioAnalyzeNoteFrequency object which has been modified to work with an audio
+sample size of 1024 rather than the Audio.h library’s default of 128. In addition, the pitch shift
+algorithms need to know the target pitch. For this, a simple function is called to convert the MIDI
+note value (0 to 127) into a target frequency. Together, the analysis pitch and target pitch are
+used to determine the shift amount that is then performed by the algorithms.
+
+In testing, we noted that Phase Vocoding had better performance on target frequencies lower than an
+octave below the analysis frequency than did TD-PSOLA. As such, we implemented a crossfade between
+the two algorithms for these low frequencies. This allows for much better audio quality when shifting to lower frequencies.
+

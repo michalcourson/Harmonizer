@@ -1,0 +1,20 @@
+INSTALL
+1. Install arduino IDE and teensyduino as instructed in the lab documents 
+(Arudino 1.8.13 from https://www.arduino.cc/en/Main/OldSoftwareReleases#previous 
+and Teensyduino from https://www.pjrc.com/teensy/td_download.html)
+
+2. Copy 
+	effect_pitch_shift.cpp
+	effect_pitch_shift.h
+	analyze_notefreq.cpp
+	analyze_notefreq.h
+	Audio.h
+into the Audio library folder located at [Arduino]/hardware/teensy/avr/libraries/Audio
+
+3. Copy
+	AudioStream.h
+into the Teensy Core folder located at [Arduino]/hardware/teensy/avr/cores/teensy4
+
+4. Open the Arduino sketch .ino file, in Tools, set Optimize to Fastest, and USB Type to MIDI
+
+5. Upload the sketch to the teensy

@@ -1,0 +1,12 @@
+A line level monophonic input should be sent into the line_in pins on the Teensy audio shield.
+The hardware we designed converts an xlr mic output to this line level signal, but an 1/8"
+audio source running directly into the audio shield will also work. The output will be sent
+out of the audio shield and can be connected to headphones, speakers or a recording device. 
+
+A USB MIDI controller can be directly plugged into the usb port that is connected to the header
+pins on the teensy. MIDI control can also come from a separate USB host by plugging the Teensy
+into the host with a micro-USB to USB-A cable. The Teensy should detect which type of connection
+it is using should automatically be selectable as a MIDI output device on the host side. 
+
+Once everything is connected, the user need only sing or play an instrument into the input while
+using the MIDI control and the Harmonizer will output the pitch shifted harmonies.

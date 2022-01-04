@@ -1,0 +1,14 @@
+Usage for Offline C++
+The structure of the C++ prototype is very similar to the final implementation that gets loaded
+onto the hardware. The main difference is this version uses a separate driver program to feed
+in audio as opposed to a microphone. To use this prototype, just compile test.cpp along with
+effect_pitch_shift.cpp and run the executable.
+
+The input wav file, output wav file, algorithm choice starting period in samples, and target 
+period in samples are all defined by the user at runtime. If TD-PSOLA is the algorithm selected,
+it is best to test with a wav file that only has one pitch, as it relies on having an accurate
+starting period. Phase-Vocoding only relies on the ratio between the starting period and the 
+target period so this is not an issue.
+
+compilation command:
+g++ --std==c+11 -O3 test.cpp effect_shift_pitch.cpp -o [executable name]

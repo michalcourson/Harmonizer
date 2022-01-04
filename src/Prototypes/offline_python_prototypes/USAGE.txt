@@ -1,0 +1,15 @@
+Python prototype usage:
+Each file is stand alone with corresponding imports of the modules below in the beginning of the
+code. The code is commented to tell the user where they are able to modify lines in the program.
+An example is the pitch in which the user can change the number. Each of these prototypes can
+either take in a wav file or use a built in sine generator function. Outputs after shifting by
+the amount specified in the .py file will be produced while running the code.
+
+PYTHON MODULES TO INSTALL:
+Numpy
+Matplotlib
+Scipy
+Cmath
+Sys
+Wave
+soundfile
